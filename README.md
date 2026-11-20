@@ -43,7 +43,17 @@ The crop below is that screen without the Jira sidebar or the account bar. It en
 
 ## When the last error does not name a field
 
-The schedule shows the last error after a failed check. If that text does not name the field Jira rejected, open the project and start one issue of the same type. The create screen lists required fields this app does not ask for, such as priority. Make that field optional, or give it a default, then resume the schedule. A subtask fails for a different reason: the schedule has no parent issue, so choose a standard type instead.
+The schedule shows the last error after a failed check. If that text does not name the field Jira rejected, open the project and start one issue of the same type. The create screen lists required fields this app does not ask for, such as priority. Make that field optional, or give it a default, then resume the schedule. On the build deployed on 20 November 2026, that Resume leaves the five-failure count in place. See [Resume after five failures](#resume-after-five-failures). A subtask fails for a different reason: the schedule has no parent issue, so choose a standard type instead.
+
+## Resume after five failures
+
+Each failed check adds one to a count stored on the schedule. At five, the schedule pauses and the last run reads `Paused after five failed attempts`.
+
+The build deployed on 20 November 2026 turns the schedule back on when you press Resume and leaves that count at five. One more failed check pauses it again. The last error stays on the page, so a field name such as `priority` is still there.
+
+The next build, which is not deployed, sets the count to zero when you press Resume after at least one failure and sets the last run to `Resumed. The next hourly check tries again.` The last error stays. The following failed check is then retry 1 of 5, not an immediate pause. Resume of a schedule whose count is already zero leaves the last run as it was, including `Already created: SHOP-8`.
+
+There is no public install link.
 
 ## Worked example
 
