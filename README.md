@@ -79,6 +79,8 @@ Open a ticket at <https://portal.designmastersolutions.com/submitticket.php> and
 
 ## Privacy and terms
 
+The privacy page states what this app keeps on your own Jira site: the schedule (project key, issue type, summary, description, repetition, run dates, and the last outcome or error) and the Atlassian account ID of the person who created it. Typing a project key reads the issue types that project can create. At the scheduled time the app looks for an issue it already created for that run and, if there is none, creates one. Once a week it reports that creator account ID to Atlassian. If the account is closed, only that account ID is removed. The schedule and the work text stay.
+
 - Privacy: <https://www.designmastersolutions.com/privacy.html#atlassian-apps>
 - Terms: <https://www.designmastersolutions.com/terms.html>
 
