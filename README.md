@@ -21,6 +21,10 @@ User guide and support for **Recurring Work for Jira**, an Atlassian Forge app t
 
 You can pause or remove a schedule at any time from the same page. A schedule belongs to the whole Jira site, so every schedule is visible to people who can open the app.
 
+## When the last error does not name a field
+
+The schedule shows the last error after a failed check. If that text does not name the field Jira rejected, open the project and start one issue of the same type. The create screen lists required fields this app does not ask for, such as priority. Make that field optional, or give it a default, then resume the schedule. A subtask fails for a different reason: the schedule has no parent issue, so choose a standard type instead.
+
 ## Worked example
 
 On 19 November 2026 a private Jira site used a development install, which is not a Marketplace install. The schedule was:
