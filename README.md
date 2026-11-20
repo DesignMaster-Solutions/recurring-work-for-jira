@@ -14,7 +14,7 @@ User guide and support for **Recurring Work for Jira**, an Atlassian Forge app t
 ## Set up a schedule
 
 1. In Jira, open **Apps > Recurring Work**.
-2. Fill in the project key (for example `OPS`) and the issue type ID of the project (for example the ID of *Task*).
+2. Fill in the project key (for example `OPS`) and the numeric issue type ID of a standard type in that project, such as Task or Bug. Do not use a subtask ID. A scheduled issue has no parent, so Jira rejects a subtask and the schedule pauses after five failed checks.
 3. Write the issue summary and, if you want, the description that every run will copy.
 4. Pick the first run date and time, and how often it repeats.
 5. Select **Create schedule**. The app checks about once an hour. The first issue is created on the first check after the time you chose, and the list then shows the last run or the error.
@@ -37,7 +37,13 @@ The Marketplace listing is not published, so there is no public install link yet
 
 ## Finding the issue type ID
 
-Run `forge`-free: open `https://your-site.atlassian.net/rest/api/3/issue/createmeta?projectKeys=OPS&expand=projects.issuetypes` in a browser where you are signed in, and read the `id` of the issue type you want. The Jira UI also shows it in the issue type settings of the project.
+The form in the current build asks for the numeric ID, not the type name. Open this URL while you are signed in to that Jira site, and replace `OPS` with the project key:
+
+`https://your-site.atlassian.net/rest/api/3/issue/createmeta?projectKeys=OPS&expand=projects.issuetypes`
+
+Read `projects[].issuetypes[]`. Copy the `id` whose `subtask` is false. The project settings page for issue types shows the same ID.
+
+If the body is `{"expand":"projects","projects":[]}`, that browser is not signed in to the site. On 19 November 2026, `https://dms-release-gate.atlassian.net/rest/api/3/issue/createmeta?projectKeys=SHOP&expand=projects.issuetypes` returned HTTP 200 with that empty list and no session. A signed-in page lists the types under `projects`.
 
 ## Support
 
