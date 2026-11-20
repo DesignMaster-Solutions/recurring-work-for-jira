@@ -65,13 +65,26 @@ The form lists type names. You do not type a numeric ID. The line under the list
 
 On 20 November 2026, project `SHOP` on the development install offered Bug, Epic, Story, and Task. No subtask. A project key Jira does not know stays on the form as Jira's own sentence. Typing `SHOPSHOP` showed: "Jira 404 reading issue types for SHOPSHOP. No project could be found with id or key 'SHOPSHOP'." Replacing it with `SHOP` loaded the type list.
 
-To read the same IDs outside the app, open this URL while you are signed in to that Jira site, and replace `OPS` with the project key:
+You do not paste an issue type ID into the app. To see the same names outside it, open this URL while you are signed in to that Jira site, and replace `OPS` with the project key:
 
 `https://your-site.atlassian.net/rest/api/3/issue/createmeta?projectKeys=OPS&expand=projects.issuetypes`
 
-Read `projects[].issuetypes[]`. Copy the `id` whose `subtask` is false. The project settings page for issue types shows the same ID.
+Read `projects[].issuetypes[]`. A row with `subtask` true is left off the form. The name in the form is the name in that list.
 
 If the body is `{"expand":"projects","projects":[]}`, that browser is not signed in to the site. On 19 November 2026, `https://dms-release-gate.atlassian.net/rest/api/3/issue/createmeta?projectKeys=SHOP&expand=projects.issuetypes` returned HTTP 200 with that empty list and no session. A signed-in page lists the types under `projects`.
+
+## A 31st that comes back after February
+
+A monthly schedule keeps the day you chose. A shorter month uses its last day, and the following month returns to the original day. The local time stays put when daylight-saving time starts. Weekday and weekly schedules use that same local clock.
+
+This is the result of the app's schedule calculation for day 31 at 09:30 in America/New_York. 2027 is not a leap year, and US clocks spring forward on 14 March 2027.
+
+- 31 January 2027, 09:30 (`2027-01-31T14:30:00.000Z`) is followed by 28 February 2027, 09:30 (`2027-02-28T14:30:00.000Z`). The list line is `Every month · Earliest check: 28 Feb 2027, 09:30 (America/New_York)`.
+- That February check still remembers day 31, so the next one is 31 March 2027, 09:30 (`2027-03-31T13:30:00.000Z`). The list line is `Every month · Earliest check: 31 Mar 2027, 09:30 (America/New_York)`. The UTC hour moved from 14:30 to 13:30 because daylight-saving time had started. The local time stayed 09:30.
+
+A weekday schedule does the same. Friday 12 March 2027, 09:30 America/New_York (`2027-03-12T14:30:00.000Z`) skips Saturday and Sunday. The next check is Monday 15 March 2027, 09:30 (`2027-03-15T13:30:00.000Z`), shown as `Weekdays · Earliest check: 15 Mar 2027, 09:30 (America/New_York)`.
+
+The screen deployed on 20 November 2026 still says "Daily and weekly runs keep that local time across daylight-saving changes." That sentence leaves out weekday and monthly runs, which already use this clock. The next build says daily, weekday, weekly, and monthly runs keep that local time. The installed screen does not say that yet. There is no public install link.
 
 ## Support
 
