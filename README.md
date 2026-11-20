@@ -21,6 +21,14 @@ User guide and support for **Recurring Work for Jira**, an Atlassian Forge app t
 
 You can pause or remove a schedule at any time from the same page. A schedule belongs to the whole Jira site, so every schedule is visible to people who can open the app.
 
+## The confirmation still names the exact minute
+
+The production build from 19 November 2026 answers Create schedule with "Schedule created. Jira will create the first issue at the selected time." That sentence is early. The check runs about once an hour. In the worked example the first run was 18:00 America/Sao_Paulo and SHOP-8 was created at 18:55.
+
+The next production build changes that confirmation, and the note under the time field, to: "Jira checks about once an hour. The issue is created on the first check after the time you chose, not at that exact minute."
+
+A weekday schedule in the installed build still creates the first issue on the date you pick, including Saturday or Sunday. Later runs skip the weekend. The next build refuses a Saturday or Sunday first run and asks for a Monday-to-Friday date. Until that build is in production, choose the first run on a weekday yourself.
+
 ## When the last error does not name a field
 
 The schedule shows the last error after a failed check. If that text does not name the field Jira rejected, open the project and start one issue of the same type. The create screen lists required fields this app does not ask for, such as priority. Make that field optional, or give it a default, then resume the schedule. A subtask fails for a different reason: the schedule has no parent issue, so choose a standard type instead.
