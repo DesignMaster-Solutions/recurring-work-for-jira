@@ -29,6 +29,16 @@ The next production build changes that confirmation, and the note under the time
 
 A weekday schedule in the installed build still creates the first issue on the date you pick, including Saturday or Sunday. Later runs skip the weekend. The next build refuses a Saturday or Sunday first run and asks for a Monday-to-Friday date. Until that build is in production, choose the first run on a weekday yourself.
 
+## The list still says Next
+
+Under each schedule, the production build from 19 November 2026 shows the raw repeat code, the word Next, and a clock in the time zone of the browser that has the page open. That reads as the minute the issue is created. In the worked example the schedule was 18:00 America/Sao_Paulo and SHOP-8 was created at 18:55.
+
+The next production build replaces that line with the schedule's own time zone. For that same moment it reads:
+
+`Every day · Earliest check: 19 Nov 2026, 18:00 (America/Sao_Paulo)`
+
+That time is the earliest moment the hourly check may create the issue. The installed app does not show this sentence yet.
+
 ## When the last error does not name a field
 
 The schedule shows the last error after a failed check. If that text does not name the field Jira rejected, open the project and start one issue of the same type. The create screen lists required fields this app does not ask for, such as priority. Make that field optional, or give it a default, then resume the schedule. A subtask fails for a different reason: the schedule has no parent issue, so choose a standard type instead.
