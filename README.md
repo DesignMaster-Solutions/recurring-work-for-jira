@@ -14,30 +14,28 @@ User guide and support for **Recurring Work for Jira**, an Atlassian Forge app t
 ## Set up a schedule
 
 1. In Jira, open **Apps > Recurring Work**.
-2. Fill in the project key (for example `OPS`) and the numeric issue type ID of a standard type in that project, such as Task or Bug. Do not use a subtask ID. A scheduled issue has no parent, so Jira rejects a subtask and the schedule pauses after five failed checks.
+2. Type the project key (for example `OPS`). The issue type list fills with the types that project can create. Pick one by name. Subtasks stay off the list, because a schedule has no parent issue.
 3. Write the issue summary and, if you want, the description that every run will copy.
 4. Pick the first run date and time, and how often it repeats.
 5. Select **Create schedule**. The app checks about once an hour. The first issue is created on the first check after the time you chose, and the list then shows the last run or the error.
 
 You can pause or remove a schedule at any time from the same page. A schedule belongs to the whole Jira site, so every schedule is visible to people who can open the app.
 
-## The confirmation still names the exact minute
+## What Create schedule tells you
 
-The production build from 19 November 2026 answers Create schedule with "Schedule created. Jira will create the first issue at the selected time." That sentence is early. The check runs about once an hour. In the worked example the first run was 18:00 America/Sao_Paulo and SHOP-8 was created at 18:55.
+Production and development, deployed 20 November 2026, answer Create schedule with "Schedule created." and this note, which also sits under the time field: "Jira checks about once an hour. The issue is created on the first check after the time you chose, not at that exact minute."
 
-The next production build changes that confirmation, and the note under the time field, to: "Jira checks about once an hour. The issue is created on the first check after the time you chose, not at that exact minute."
+A weekday schedule refuses a Saturday or Sunday first run and keeps Create schedule disabled until the first date is Monday through Friday. The message is: "Weekday schedules start on Monday through Friday. Choose a weekday for the first run."
 
-A weekday schedule in the installed build still creates the first issue on the date you pick, including Saturday or Sunday. Later runs skip the weekend. The next build refuses a Saturday or Sunday first run and asks for a Monday-to-Friday date. Until that build is in production, choose the first run on a weekday yourself.
+On 20 November 2026 a development install, which is not a Marketplace install, showed that message for a first run of 21 November 2026 (a Saturday) and left Create schedule disabled. The same screen showed the hourly note.
 
-## The list still says Next
+## What the list shows
 
-Under each schedule, the production build from 19 November 2026 shows the raw repeat code, the word Next, and a clock in the time zone of the browser that has the page open. That reads as the minute the issue is created. In the worked example the schedule was 18:00 America/Sao_Paulo and SHOP-8 was created at 18:55.
+Under each schedule the line uses the schedule's own time zone. For the worked example's next check it reads:
 
-The next production build replaces that line with the schedule's own time zone. For that same moment it reads:
+`Every day · Earliest check: 20 Nov 2026, 18:00 (America/Sao_Paulo)`
 
-`Every day · Earliest check: 19 Nov 2026, 18:00 (America/Sao_Paulo)`
-
-That time is the earliest moment the hourly check may create the issue. The installed app does not show this sentence yet.
+That time is the earliest moment the hourly check may create the issue. On 20 November 2026 the paused SHOP-8 row on the development install showed that line, with Last run "Already created: SHOP-8" and status Paused. That check did not resume, delete, or create another schedule.
 
 ## When the last error does not name a field
 
@@ -57,9 +55,13 @@ The hourly check at 18:55 America/Sao_Paulo created issue `SHOP-8` at 18:55:49, 
 
 The Marketplace listing is not published, so there is no public install link yet.
 
-## Finding the issue type ID
+## Choosing the issue type
 
-The form in the current build asks for the numeric ID, not the type name. Open this URL while you are signed in to that Jira site, and replace `OPS` with the project key:
+The form lists type names. You do not type a numeric ID. The line under the list says: "The list is the types this project can create. Subtasks stay off the list because a schedule has no parent issue."
+
+On 20 November 2026, project `SHOP` on the development install offered Bug, Epic, Story, and Task. No subtask. A project key Jira does not know stays on the form as Jira's own sentence. Typing `SHOPSHOP` showed: "Jira 404 reading issue types for SHOPSHOP. No project could be found with id or key 'SHOPSHOP'." Replacing it with `SHOP` loaded the type list.
+
+To read the same IDs outside the app, open this URL while you are signed in to that Jira site, and replace `OPS` with the project key:
 
 `https://your-site.atlassian.net/rest/api/3/issue/createmeta?projectKeys=OPS&expand=projects.issuetypes`
 
