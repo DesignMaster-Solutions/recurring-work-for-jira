@@ -80,9 +80,9 @@ The figures below are the app's schedule calculation for a daily run at 18:00 in
 - The item is the 18 November occurrence. 19, 20, and 21 November are not created.
 - The list then reads `Every day · Earliest check: 22 Nov 2026, 18:00 (America/Sao_Paulo)` (`2026-11-22T21:00:00.000Z`).
 
-On the build deployed on 20 November 2026 the last run reads `Created: KEY` or `Already created: KEY`. The next build, which is not deployed, adds a sentence when slots were skipped: `Created: SHOP-12. Checks between this run and the next earliest check were not created.` If that oldest item is already there, the sentence follows `Already created: SHOP-12` in the same way. A check 55 minutes after 18:00 still reads `Created: SHOP-8`, and the next earliest check is 19 November 2026, 18:00 (`2026-11-19T21:00:00.000Z`).
+On the build deployed on 20 November 2026 the last run reads `Created: KEY` or `Already created: KEY`. The next build, which is not deployed, names the skipped dates in the schedule time zone. For this example the last run reads `Created: SHOP-12. No issues were created for 19 Nov 2026 through 21 Nov 2026.` If that oldest item is already there, the same dates follow `Already created: SHOP-12`. One missed day is singular: a check at 18:00 on 19 November reads `Created: SHOP-9. No issue was created for 19 Nov 2026.` A daily 23:30 America/Sao_Paulo run due on 18 November (`2026-11-19T02:30:00.000Z`), checked one day later (`2026-11-20T02:30:00.000Z`), names 19 November. That is the local date. The UTC date of that instant is 20 November, and the line does not use it. A check 55 minutes after 18:00 still reads `Created: SHOP-8`, and the next earliest check is 19 November 2026, 18:00 (`2026-11-19T21:00:00.000Z`).
 
-Weekday, weekly, and monthly schedules use the same rule: a slot is omitted only when that single check jumps over it. There is no public install link.
+Weekday, weekly, and monthly schedules use the same rule: a slot is omitted only when that single check jumps over it. A weekday schedule due Friday 20 November 2026 at 12:00 UTC, checked Wednesday 25 November at 12:00 UTC, reads `Created: SHOP-11. No issues were created for 23 Nov 2026 through 25 Nov 2026.` Saturday and Sunday are not in that range. There is no public install link.
 
 ## Choosing the issue type
 
