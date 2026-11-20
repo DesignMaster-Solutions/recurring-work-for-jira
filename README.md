@@ -109,7 +109,9 @@ This is the result of the app's schedule calculation for day 31 at 09:30 in Amer
 
 A weekday schedule does the same. Friday 12 March 2027, 09:30 America/New_York (`2027-03-12T14:30:00.000Z`) skips Saturday and Sunday. The next check is Monday 15 March 2027, 09:30 (`2027-03-15T13:30:00.000Z`), shown as `Weekdays · Earliest check: 15 Mar 2027, 09:30 (America/New_York)`.
 
-The screen deployed on 20 November 2026 still says "Daily and weekly runs keep that local time across daylight-saving changes." That sentence leaves out weekday and monthly runs, which already use this clock. The next build says daily, weekday, weekly, and monthly runs keep that local time. The installed screen does not say that yet. There is no public install link.
+The screen deployed on 20 November 2026 still says "Daily and weekly runs keep that local time across daylight-saving changes." That sentence leaves out weekday and monthly runs, which already use this clock. The next build says daily, weekday, weekly, and monthly runs keep that local time. The installed screen does not say that yet.
+
+That same installed screen shows the February earliest check and stops there. It does not say that day 31 comes back. The next build, which is not deployed, keeps the earliest check and adds the return day: `Every month · Earliest check: 28 Feb 2027, 09:30 (America/New_York). Day 31 returns on 31 Mar 2027.` The March line stays as written above, because that check is already day 31. There is no public install link.
 
 ## Support
 
