@@ -37,6 +37,10 @@ Under each schedule the line uses the schedule's own time zone. For the worked e
 
 That time is the earliest moment the hourly check may create the issue. On 20 November 2026 the paused SHOP-8 row on the development install showed that line, with Last run "Already created: SHOP-8" and status Paused. That check did not resume, delete, or create another schedule.
 
+The crop below is that screen without the Jira sidebar or the account bar. It ends on the earliest-check line because the window cut off the Last run line.
+
+![SHOP lists Bug, Epic, Story and Task. The paused schedule shows the earliest check.](highlight-types-and-earliest-check.jpg)
+
 ## When the last error does not name a field
 
 The schedule shows the last error after a failed check. If that text does not name the field Jira rejected, open the project and start one issue of the same type. The create screen lists required fields this app does not ask for, such as priority. Make that field optional, or give it a default, then resume the schedule. A subtask fails for a different reason: the schedule has no parent issue, so choose a standard type instead.
@@ -57,7 +61,7 @@ The Marketplace listing is not published, so there is no public install link yet
 
 ## Choosing the issue type
 
-The form lists type names. You do not type a numeric ID. The line under the list says: "The list is the types this project can create. Subtasks stay off the list because a schedule has no parent issue."
+The form lists type names. You do not type a numeric ID. The line under the list says: "The list is the types this project can create. Subtasks stay off the list because a schedule has no parent issue." The open list for project SHOP is in the crop under [What the list shows](#what-the-list-shows).
 
 On 20 November 2026, project `SHOP` on the development install offered Bug, Epic, Story, and Task. No subtask. A project key Jira does not know stays on the form as Jira's own sentence. Typing `SHOPSHOP` showed: "Jira 404 reading issue types for SHOPSHOP. No project could be found with id or key 'SHOPSHOP'." Replacing it with `SHOP` loaded the type list.
 
