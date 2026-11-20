@@ -69,6 +69,21 @@ The hourly check at 18:55 America/Sao_Paulo created issue `SHOP-8` at 18:55:49, 
 
 The Marketplace listing is not published, so there is no public install link yet.
 
+## A check that is late by whole days
+
+One hourly check creates the oldest due item and sets the earliest check to the next slot still in the future. Slots between those two times are not created.
+
+The figures below are the app's schedule calculation for a daily run at 18:00 in America/Sao_Paulo. The 19 November SHOP-8 run was 55 minutes late, so its next slot was the following day. This section does not describe that run.
+
+- Due time: 18 November 2026, 18:00 (`2026-11-18T21:00:00.000Z`).
+- The check is at 18:00 on 21 November 2026 (`2026-11-21T21:00:00.000Z`).
+- The item is the 18 November occurrence. 19, 20, and 21 November are not created.
+- The list then reads `Every day · Earliest check: 22 Nov 2026, 18:00 (America/Sao_Paulo)` (`2026-11-22T21:00:00.000Z`).
+
+On the build deployed on 20 November 2026 the last run reads `Created: KEY` or `Already created: KEY`. The next build, which is not deployed, adds a sentence when slots were skipped: `Created: SHOP-12. Checks between this run and the next earliest check were not created.` If that oldest item is already there, the sentence follows `Already created: SHOP-12` in the same way. A check 55 minutes after 18:00 still reads `Created: SHOP-8`, and the next earliest check is 19 November 2026, 18:00 (`2026-11-19T21:00:00.000Z`).
+
+Weekday, weekly, and monthly schedules use the same rule: a slot is omitted only when that single check jumps over it. There is no public install link.
+
 ## Choosing the issue type
 
 The form lists type names. You do not type a numeric ID. The line under the list says: "The list is the types this project can create. Subtasks stay off the list because a schedule has no parent issue." The open list for project SHOP is in the crop under [What the list shows](#what-the-list-shows).
