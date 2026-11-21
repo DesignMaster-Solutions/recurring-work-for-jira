@@ -43,15 +43,13 @@ The crop below is that screen without the Jira sidebar or the account bar. It en
 
 ## When the last error does not name a field
 
-The schedule shows the last error after a failed check. If that text does not name the field Jira rejected, open the project and start one issue of the same type. The create screen lists required fields this app does not ask for, such as priority. Make that field optional, or give it a default, then resume the schedule. On the build deployed on 20 November 2026, that Resume leaves the five-failure count in place. See [Resume after five failures](#resume-after-five-failures). A subtask fails for a different reason: the schedule has no parent issue, so choose a standard type instead.
+The schedule shows the last error after a failed check. If that text does not name the field Jira rejected, open the project and start one issue of the same type. The create screen lists required fields this app does not ask for, such as priority. Make that field optional, or give it a default, then resume the schedule. Production deployed at 23:01 America/Sao_Paulo on 20 November 2026 sets that count back to zero. See [Resume after five failures](#resume-after-five-failures). A subtask fails for a different reason: the schedule has no parent issue, so choose a standard type instead.
 
 ## Resume after five failures
 
 Each failed check adds one to a count stored on the schedule. At five, the schedule pauses and the last run reads `Paused after five failed attempts`.
 
-The build deployed on 20 November 2026 turns the schedule back on when you press Resume and leaves that count at five. One more failed check pauses it again. The last error stays on the page, so a field name such as `priority` is still there.
-
-The next build, which is not deployed, sets the count to zero when you press Resume after at least one failure and sets the last run to `Resumed. The next hourly check tries again.` The last error stays. The following failed check is then retry 1 of 5, not an immediate pause. Resume of a schedule whose count is already zero leaves the last run as it was, including `Already created: SHOP-8`.
+Production deployed at 23:01 America/Sao_Paulo on 20 November 2026 sets the count to zero when you press Resume after at least one failure and sets the last run to `Resumed. The next hourly check tries again.` The last error stays, so a field name such as `priority` is still there. The following failed check is then retry 1 of 5, not an immediate pause. Resume of a schedule whose count is already zero leaves the last run as it was, including `Already created: SHOP-8`. The build from earlier that day turned the schedule back on and left the count at five. That screen was not opened again after the 23:01 deploy.
 
 There is no public install link.
 
@@ -80,7 +78,7 @@ The figures below are the app's schedule calculation for a daily run at 18:00 in
 - The item is the 18 November occurrence. 19, 20, and 21 November are not created.
 - The list then reads `Every day · Earliest check: 22 Nov 2026, 18:00 (America/Sao_Paulo)` (`2026-11-22T21:00:00.000Z`).
 
-On the build deployed on 20 November 2026 the last run reads `Created: KEY` or `Already created: KEY`. The next build, which is not deployed, names the skipped dates in the schedule time zone. For this example the last run reads `Created: SHOP-12. No issues were created for 19 Nov 2026 through 21 Nov 2026.` If that oldest item is already there, the same dates follow `Already created: SHOP-12`. One missed day is singular: a check at 18:00 on 19 November reads `Created: SHOP-9. No issue was created for 19 Nov 2026.` A daily 23:30 America/Sao_Paulo run due on 18 November (`2026-11-19T02:30:00.000Z`), checked one day later (`2026-11-20T02:30:00.000Z`), names 19 November. That is the local date. The UTC date of that instant is 20 November, and the line does not use it. A check 55 minutes after 18:00 still reads `Created: SHOP-8`, and the next earliest check is 19 November 2026, 18:00 (`2026-11-19T21:00:00.000Z`).
+Production deployed at 23:01 America/Sao_Paulo on 20 November 2026 names the skipped dates in the schedule time zone. For this example the last run reads `Created: SHOP-12. No issues were created for 19 Nov 2026 through 21 Nov 2026.` The build from earlier that day read only `Created: KEY` or `Already created: KEY`. That screen was not opened again after the 23:01 deploy. If that oldest item is already there, the same dates follow `Already created: SHOP-12`. One missed day is singular: a check at 18:00 on 19 November reads `Created: SHOP-9. No issue was created for 19 Nov 2026.` A daily 23:30 America/Sao_Paulo run due on 18 November (`2026-11-19T02:30:00.000Z`), checked one day later (`2026-11-20T02:30:00.000Z`), names 19 November. That is the local date. The UTC date of that instant is 20 November, and the line does not use it. A check 55 minutes after 18:00 still reads `Created: SHOP-8`, and the next earliest check is 19 November 2026, 18:00 (`2026-11-19T21:00:00.000Z`).
 
 Weekday, weekly, and monthly schedules use the same rule: a slot is omitted only when that single check jumps over it. A weekday schedule due Friday 20 November 2026 at 12:00 UTC, checked Wednesday 25 November at 12:00 UTC, reads `Created: SHOP-11. No issues were created for 23 Nov 2026 through 25 Nov 2026.` Saturday and Sunday are not in that range. There is no public install link.
 
@@ -89,6 +87,8 @@ Weekday, weekly, and monthly schedules use the same rule: a slot is omitted only
 The form lists type names. You do not type a numeric ID. The line under the list says: "The list is the types this project can create. Subtasks stay off the list because a schedule has no parent issue." The open list for project SHOP is in the crop under [What the list shows](#what-the-list-shows).
 
 On 20 November 2026, project `SHOP` on the development install offered Bug, Epic, Story, and Task. No subtask. A project key Jira does not know stays on the form as Jira's own sentence. Typing `SHOPSHOP` showed: "Jira 404 reading issue types for SHOPSHOP. No project could be found with id or key 'SHOPSHOP'." Replacing it with `SHOP` loaded the type list.
+
+Loading that list, and saving the schedule, both ask Jira as you whether you can create issues in the project. The app calls `/rest/api/3/mypermissions` for `CREATE_ISSUES` and stores the schedule only when `havePermission` is true. Otherwise the form says `You need permission to create issues in PROJECT.` The hourly run has no person present, so it creates the work item as the app. Production deployed at 23:01 America/Sao_Paulo on 20 November 2026 includes this check.
 
 You do not paste an issue type ID into the app. To see the same names outside it, open this URL while you are signed in to that Jira site, and replace `OPS` with the project key:
 
@@ -109,9 +109,7 @@ This is the result of the app's schedule calculation for day 31 at 09:30 in Amer
 
 A weekday schedule does the same. Friday 12 March 2027, 09:30 America/New_York (`2027-03-12T14:30:00.000Z`) skips Saturday and Sunday. The next check is Monday 15 March 2027, 09:30 (`2027-03-15T13:30:00.000Z`), shown as `Weekdays · Earliest check: 15 Mar 2027, 09:30 (America/New_York)`.
 
-The screen deployed on 20 November 2026 still says "Daily and weekly runs keep that local time across daylight-saving changes." That sentence leaves out weekday and monthly runs, which already use this clock. The next build says daily, weekday, weekly, and monthly runs keep that local time. The installed screen does not say that yet.
-
-That same installed screen shows the February earliest check and stops there. It does not say that day 31 comes back. The next build, which is not deployed, keeps the earliest check and adds the return day: `Every month · Earliest check: 28 Feb 2027, 09:30 (America/New_York). Day 31 returns on 31 Mar 2027.` The March line stays as written above, because that check is already day 31. There is no public install link.
+Production deployed at 23:01 America/Sao_Paulo on 20 November 2026 says daily, weekday, weekly, and monthly runs keep that local time. The same build adds the return day on a short month: `Every month · Earliest check: 28 Feb 2027, 09:30 (America/New_York). Day 31 returns on 31 Mar 2027.` The March line stays the earliest-check line alone, because that check is already day 31. The screen photographed earlier on 20 November was the previous build. It said only daily and weekly runs keep that local time, and its February line stopped at the earliest check. That screen was not opened again after the 23:01 deploy. There is no public install link.
 
 ## Support
 
