@@ -110,6 +110,45 @@ Production deployed at 23:01 America/Sao_Paulo on 20 November 2026 names the ski
 
 Weekday, weekly, and monthly schedules use the same rule: a slot is omitted only when that single check jumps over it. A weekday schedule due Friday 20 November 2026 at 12:00 UTC, checked Wednesday 25 November at 12:00 UTC, reads `Created: SHOP-11. No issues were created for 23 Nov 2026 through 25 Nov 2026.` Saturday and Sunday are not in that range. There is no public install link.
 
+When that walk still cannot reach a future time, the check stops before it creates the oldest item. See [When a schedule is too far behind](#when-a-schedule-is-too-far-behind).
+
+## When a schedule is too far behind
+
+There is no public install link yet. The Marketplace listing is still in review. On a development install, open **Apps > Recurring Work**. The page does not print this sentence.
+
+The hourly check creates the oldest due item and moves the earliest check forward, including when several days were missed. See [A check that is late by whole days](#a-check-that-is-late-by-whole-days). After the first step it may take up to 1000 more steps. If the earliest check is still at or before the moment of the check, the run throws **The schedule is too far behind to advance safely.**
+
+No issue is created. The schedule row stays as it was: the earliest check, the attempt count, and the last error. The page keeps showing that earliest check. The last error box is not replaced with this sentence. The hourly pass reads active schedules from the earliest check forward and stops on this schedule, so a schedule with a later earliest check is not run in that same hour.
+
+Pause takes the schedule out of that pass. The status reads Paused. Resume turns it back on and leaves the earliest check where it was, so the next hour throws again. Delete removes the schedule. Create schedule then requires a first run in the future.
+
+**Example input:** daily, time zone UTC, earliest check 1 January 2024, 12:00 UTC (`2024-01-01T12:00:00.000Z`). The check runs at 28 September 2026, 12:00 UTC (`2026-09-28T12:00:00.000Z`).
+
+**Result:** `The schedule is too far behind to advance safely.` The row still reads `Every day · Earliest check: 1 Jan 2024, 12:00 (UTC)`. Nothing is created.
+
+The same check one millisecond earlier (`2026-09-28T11:59:59.999Z`) does not throw. The oldest item is the 1 January 2024 occurrence, and the next earliest check is 28 September 2026, 12:00 UTC. A check at 27 September 2026, 12:00 UTC (`2026-09-27T12:00:00.000Z`, 1000 days later) does the same: next earliest check 28 September 2026, 12:00 UTC. A check at 29 September 2026, 12:00 UTC throws again.
+
+At 28 September 2026, 12:00 UTC the other repeats, with the same earliest check, do not throw:
+
+| Repeat | Next earliest check |
+|---|---|
+| Weekdays | 29 September 2026, 12:00 UTC (`2026-09-29T12:00:00.000Z`) |
+| Weekly | 5 October 2026, 12:00 UTC (`2026-10-05T12:00:00.000Z`) |
+| Monthly, day 1 | 1 October 2026, 12:00 UTC (`2026-10-01T12:00:00.000Z`) |
+
+Each repeat throws at its own later instant. One millisecond earlier, the earliest check becomes that instant:
+
+| Repeat | Check that throws |
+|---|---|
+| Daily | 28 September 2026, 12:00 UTC (`2026-09-28T12:00:00.000Z`) |
+| Weekdays | 2 November 2027, 12:00 UTC (`2027-11-02T12:00:00.000Z`) |
+| Weekly | 9 March 2043, 12:00 UTC (`2043-03-09T12:00:00.000Z`) |
+| Monthly, day 1 | 1 June 2107, 12:00 UTC (`2107-06-01T12:00:00.000Z`) |
+
+A paused schedule, and a schedule whose earliest check is still in the future, are not due. They do not throw this sentence.
+
+Checked against `runDue` in production source `df9762aa` on 23 November 2026. `dispatch` calls `runDue` before the `try` that creates the issue, so this throw is not stored as the last error. This is not a new click on a customer site.
+
 ## Choosing the issue type
 
 The form lists type names. You do not type a numeric ID. The line under the list says: "The list is the types this project can create. Subtasks stay off the list because a schedule has no parent issue." The open list for project SHOP is in the crop under [What the list shows](#what-the-list-shows).
