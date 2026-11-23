@@ -29,6 +29,34 @@ A weekday schedule refuses a Saturday or Sunday first run and keeps Create sched
 
 On 20 November 2026 a development install, which is not a Marketplace install, showed that message for a first run of 21 November 2026 (a Saturday) and left Create schedule disabled. The same screen showed the hourly note.
 
+If **Create schedule** stays enabled and the click refuses, see [When Create schedule refuses the form](#when-create-schedule-refuses-the-form).
+
+## When Create schedule refuses the form
+
+There is no public install link yet. The Marketplace listing is still in review. On a development install, or where the subscription is active, open **Apps > Recurring Work**.
+
+**Create schedule** stays enabled when the summary is empty and when the first run is now or in the past. It stays disabled when no issue type is chosen, when the weekday warning is showing, or while a save is in progress.
+
+The click shows one red line. The schedule is not stored. Jira is not asked whether you can create issues in the project until the summary and the first run are accepted.
+
+| What you entered | What you see |
+|---|---|
+| Summary empty or only spaces, first run in the future | **Summary must contain 1 to 255 characters.** |
+| A summary, and a first run at the moment of the click or earlier, including a cleared date | **The first run must be a future date and time.** |
+| Summary empty, and the first run is now or in the past | **Summary must contain 1 to 255 characters. The first run must be a future date and time.** |
+
+A summary of 255 characters is accepted. The summary field stops at 255, so the form does not send a longer one. A first run one millisecond after the click passes the time check.
+
+If 100 schedules are already active, the click shows **You can keep up to 100 active schedules.** and does not show the summary sentence or the time sentence. That count is read before the form is checked. The schedule is still not stored, and Jira is still not asked.
+
+An inactive subscription does not reach these sentences. Opening the app asks for the schedule list first, and the function returns **Your Recurring Work subscription is not active. Ask a Jira admin to renew it.** The page stays on **Loading recurring schedules**, and that sentence is not drawn. A development install has no license object, so the form loads and this spinner does not appear. The hourly check does not read the license.
+
+**Example input:** issue type Task (`10001`), summary empty, first run 23 November 2026 09:00 UTC, checked at 23 November 2026 05:00 UTC. **Result:** `Summary must contain 1 to 255 characters.` Nothing is stored.
+
+**Example input:** summary `Weekly storefront stock check`, first run exactly 23 November 2026 05:00 UTC, checked at that same instant. **Result:** `The first run must be a future date and time.` Nothing is stored.
+
+Checked against `validateRule` in production source `df9762aa` on 23 November 2026. `createRule` reads how many schedules are active, then runs that check, then asks Jira for CREATE_ISSUES, then stores the schedule. This is not a new click on a customer site.
+
 ## What the list shows
 
 Under each schedule the line uses the schedule's own time zone. For the worked example's next check it reads:
