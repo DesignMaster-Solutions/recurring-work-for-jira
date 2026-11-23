@@ -19,7 +19,7 @@ User guide and support for **Recurring Work for Jira**, an Atlassian Forge app t
 4. Pick the first run date and time, and how often it repeats.
 5. Select **Create schedule**. The app checks about once an hour. The first issue is created on the first check after the time you chose, and the list then shows the last run or the error.
 
-You can pause or remove a schedule at any time from the same page. A schedule belongs to the whole Jira site, so every schedule is visible to people who can open the app.
+You can pause or remove a schedule at any time from the same page. If Pause, Resume, or Delete answers in red, see [When Pause, Resume, or Delete cannot use that schedule](#when-pause-resume-or-delete-cannot-use-that-schedule). A schedule belongs to the whole Jira site, so every schedule is visible to people who can open the app.
 
 ## What Create schedule tells you
 
@@ -148,6 +148,37 @@ Each repeat throws at its own later instant. One millisecond earlier, the earlie
 A paused schedule, and a schedule whose earliest check is still in the future, are not due. They do not throw this sentence.
 
 Checked against `runDue` in production source `df9762aa` on 23 November 2026. `dispatch` calls `runDue` before the `try` that creates the issue, so this throw is not stored as the last error. This is not a new click on a customer site.
+
+## When Pause, Resume, or Delete cannot use that schedule
+
+There is no public install link yet. The Marketplace listing is still in review. On a development install, or where the subscription is active, open **Apps > Recurring Work**. Each row under Schedules has **Pause** or **Resume**, and **Delete**. There is no field for a schedule id. The click sends the id already on that row.
+
+**Pause** shows while the row is Active. **Resume** shows while it is Paused. Both call the same function. If nothing is stored for that id, the page shows one red line: **This schedule no longer exists.** The list stays as it was. The earliest check, the last run, and the last error are not rewritten. Pause and Resume can be clicked again.
+
+The same sentence is returned when the id is missing or empty, and when the id is not stored. That includes an id that is not 10 to 24 letters or digits. The function looks the id up before it reads whether the click was Pause or Resume. A stored row does not show this sentence. Resume sends active true. Pause sends active false.
+
+**Delete** shows **Choose a valid schedule.** when the id is missing, empty, shorter than 10 characters, longer than 24 characters, or contains anything other than a letter or a digit. A space or a hyphen counts. Nothing is deleted. The row stays, and Delete can be clicked again.
+
+An id of 10 to 24 letters or digits is deleted even when no row is stored. That click does not show **This schedule no longer exists.** or **Choose a valid schedule.** The list reloads. An id the app creates joins the time in base 36 with up to 8 characters. On 23 November 2026 the time part was 8 characters. Two hundred thousand ids built the same way were 16 characters, and each matched.
+
+| What you click | Id | What you see |
+|---|---|---|
+| Pause or Resume | nothing stored, including a missing or empty id | **This schedule no longer exists.** The row stays. |
+| Delete | empty, `short`, 9 characters, 25 characters, or `shop-1234567890` | **Choose a valid schedule.** Nothing is deleted. |
+| Delete | `abcdefghij` (10 letters) and no stored row | The list reloads. Neither sentence above is shown. |
+| Delete | 24 letters or digits, or `ABCDEFGHIJ` | The list reloads. Neither sentence above is shown. |
+
+An inactive subscription does not draw these buttons. Opening the app asks for the list first and stays on **Loading recurring schedules**. If the click runs after the subscription has lapsed, it returns **Your Recurring Work subscription is not active. Ask a Jira admin to renew it.** before either sentence, and it does not delete or rewrite the row. A development install has no license object, so the list loads and these buttons are shown. The hourly check does not pause, resume, or delete.
+
+The red line is the sentence alone. Forge may wrap it as `There was an error invoking the function - ...`, and the page removes that prefix.
+
+**Example input:** Pause on a row whose id is not stored. **Result:** `This schedule no longer exists.` The row is not rewritten.
+
+**Example input:** Delete with id `short`. **Result:** `Choose a valid schedule.` Nothing is deleted.
+
+**Example input:** Delete with id `abcdefghij` and no stored row. **Result:** the function returns removed, and the page reloads the list. Neither sentence is returned.
+
+Checked against `setRuleActive` and `removeRule` in production source `df9762aa` on 23 November 2026. `requireLicense` runs first in both. This is not a new click on a customer site.
 
 ## Choosing the issue type
 
